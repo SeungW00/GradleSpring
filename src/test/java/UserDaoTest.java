@@ -24,16 +24,15 @@ import static org.junit.Assert.assertEquals;
     @Test
     public void add() throws SQLException, ClassNotFoundException{
             UserDao userDao = new UserDao();
-            int id =2;
-            String name = "SeungWoo1";
+
+            String name = "SeungWoo";
             String password = "1234";
 
             User user = new User();
-            user.setId(id);
             user.setName(name);
             user.setPassword(password);
 
-        userDao.add(user);
+        int id = userDao.add(user);
         User resultUser = userDao.get(id);
         assertEquals(id,resultUser.getId());
         assertEquals(name,resultUser.getName());
