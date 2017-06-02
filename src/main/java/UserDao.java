@@ -8,8 +8,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class UserDao {
 
     public User get(int id) throws SQLException, ClassNotFoundException{
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/spring","root","");
+        Connection connection = getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id = ? ");
         preparedStatement.setInt(1,id);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -28,9 +27,13 @@ public class UserDao {
 
     }
 
-    public int add(User user) throws SQLException,ClassNotFoundException{
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/spring","root","");
+        return DriverManager.getConnection("jdbc:mysql://localhost/spring","root","");
+    }
+
+    public int add(User user) throws SQLException,ClassNotFoundException{
+        Connection connection = getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("insert into users(name,password) VALUES (?,?)");
         preparedStatement.setString(1,user.getName());
         preparedStatement.setString(2,user.getPassword());
