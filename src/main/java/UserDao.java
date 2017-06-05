@@ -3,7 +3,7 @@ import java.sql.*;
 /**
  * Created by Administrator on 2017-05-30.
  */
-public class UserDao {
+public abstract class UserDao {
 
     public User get(int id) throws SQLException, ClassNotFoundException{
         Connection connection = getConnection();
@@ -25,11 +25,7 @@ public class UserDao {
 
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/spring","root","");
-        return connection;
-    }
+    public abstract Connection getConnection() throws ClassNotFoundException, SQLException ;
 
     public int add(User user) throws SQLException,ClassNotFoundException{
         Connection connection = getConnection();
