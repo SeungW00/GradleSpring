@@ -1,6 +1,4 @@
 import java.sql.*;
-import java.util.PriorityQueue;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created by Administrator on 2017-05-30.
@@ -29,7 +27,8 @@ public class UserDao {
 
     private Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
-        return DriverManager.getConnection("jdbc:mysql://localhost/spring","root","");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/spring","root","");
+        return connection;
     }
 
     public int add(User user) throws SQLException,ClassNotFoundException{
