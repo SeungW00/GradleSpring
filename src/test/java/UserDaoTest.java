@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
         public class UserDaoTest {
             @Test
             public void get() throws SQLException, ClassNotFoundException{
-                UserDao userDao =new DUserDao();
+                UserDao userDao =new UserDao();
                 int id = 5;
                 String name = "SeungWoo";
                 String password = "1234";
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
     }
     @Test
     public void add() throws SQLException, ClassNotFoundException{
-            UserDao userDao = new NUserDao();
+            UserDao userDao = new UserDao();
 
             String name = "SeungWoo";
             String password = "1234";
