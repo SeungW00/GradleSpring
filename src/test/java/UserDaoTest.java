@@ -1,5 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.SQLException;
 
@@ -16,7 +18,9 @@ import static org.junit.Assert.assertEquals;
 
         @Before
         public void setup(){
-            userDao = new DaoFactory().getUserDao();
+            //userDao = new DaoFactory().userDao();
+            ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+            userDao = context.getBean("userDao",UserDao.class);
         }
 
             @Test
