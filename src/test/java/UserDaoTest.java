@@ -1,3 +1,4 @@
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -8,9 +9,19 @@ import static org.junit.Assert.assertEquals;
  * Created by Administrator on 2017-05-30.
  */
         public class UserDaoTest {
+
+
+        private  UserDao userDao;
+
+
+        @Before
+        public void setup(){
+            userDao = new DaoFactory().getUserDao();
+        }
+
             @Test
             public void get() throws SQLException, ClassNotFoundException{
-                UserDao userDao = new DaoFactory().getUserDao();
+
                 int id = 5;
                 String name = "SeungWoo";
                 String password = "1234";
@@ -23,7 +34,7 @@ import static org.junit.Assert.assertEquals;
     }
     @Test
     public void add() throws SQLException, ClassNotFoundException{
-            UserDao userDao = new DaoFactory().getUserDao();
+
 
         String name = "SeungWoo";
         String password = "1234";
