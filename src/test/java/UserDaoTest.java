@@ -5,7 +5,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Created by Administrator on 2017-05-30.
@@ -55,4 +55,23 @@ import static org.junit.Assert.assertEquals;
 
 
     }
+    @Test
+    public void delete() throws SQLException, ClassNotFoundException {
+
+        String name = "SeungWoo";
+        String password = "1234";
+
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+
+        int id = userDao.add(user);
+        userDao.delete(id);
+        assertNull(userDao.get(id));
+    }
+
+
+
+
+
 }
