@@ -2,9 +2,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost/spring" />
+        <property name="username" value="root" />
+        <property name="password" value=""/>
+
+    </bean>
+    
     <bean id="connectionMaker" class="DConnectionMaker" />
     <bean id="userDao" class="UserDao">
         <!--><constructor-arg ref="connecti onMaker"/>-->
-        <property name="connectionMaker" ref="connectionMaker" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
 </beans>

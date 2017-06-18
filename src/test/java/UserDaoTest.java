@@ -18,8 +18,6 @@ import static org.junit.Assert.assertEquals;
 
         @Before
         public void setup(){
-            //userDao = new DaoFactory().userDao();
-         //   ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
 
             ApplicationContext context = new GenericXmlApplicationContext("daoFactory.xml");
             userDao = context.getBean("userDao",UserDao.class);
