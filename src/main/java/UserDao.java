@@ -25,8 +25,9 @@ public class UserDao {
         User user = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("select * from users where id = ? ");
-            preparedStatement.setInt(1,id);
+            StatementStrategy statementStrategy = new GetUserStatementStarategy();
+            preparedStatement = statementStrategy.makeStatement(id,connection,preparedStatement);
+
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user = new User();
@@ -65,15 +66,17 @@ public class UserDao {
     }
 
 
+
+
     public int add(User user) throws SQLException,ClassNotFoundException{
             Connection connection = null;
             PreparedStatement preparedStatement = null;
             int id = 0;
             try {
                 connection = dataSource.getConnection();
-                preparedStatement = connection.prepareStatement("insert into users(name,password) VALUES (?,?)");
-                preparedStatement.setString(1,user.getName());
-                preparedStatement.setString(2,user.getPassword());
+                StatementStrategy statementStrategy = new addUserStatmentStrategy();
+                preparedStatement = statementStrategy.makeStatement(user,connection,preparedStatement);
+
                 preparedStatement.executeUpdate();
                 id = getLastInsertId(connection);
             } catch (SQLException e) {
@@ -132,8 +135,8 @@ public class UserDao {
 
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("delete from users where id = ?");
-            preparedStatement.setInt(1,id);
+            StatementStrategy statementStrategy = new deleteStatmentStrategy();
+            preparedStatement = statementStrategy.makeStatement(id, connection, preparedStatement);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -159,5 +162,8 @@ public class UserDao {
 
 
     }
+
+
+
 
 }
