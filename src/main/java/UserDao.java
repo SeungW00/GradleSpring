@@ -1,5 +1,13 @@
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+
+import java.awt.*;
 import java.sql.*;
+
+import static java.lang.Math.toIntExact;
 
 /**
  * Created by Administrator on 2017-05-30.
@@ -7,7 +15,7 @@ import java.sql.*;
 public class UserDao {
 
 
-    private JdbcContext jdbcContext;
+    private JdbcTemplate jdbcTemplate;
 
 
     public UserDao() {
@@ -15,45 +23,50 @@ public class UserDao {
 
 
     public int add(User user) throws SQLException, ClassNotFoundException {
-        String query = "insert into users(name,password) VALUES (?,?)";
-        Object[] params = new Object[]{user.getName(),user.getPassword()};
-        StatementStrategy statementStrategy = update(query, params);
-        return jdbcContext.jdbcContextWithStatementStrategyForInsert(statementStrategy);
+        String sql = "insert into users(name,password) VALUES (?,?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection ->{
 
+           PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1,user.getName());
+            preparedStatement.setString(2,user.getPassword());
+            return preparedStatement;
+        },keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
-    private StatementStrategy update(String query, Object[] params) {
-        return connection -> {
-
-                PreparedStatement preparedStatement;
-                preparedStatement = connection.prepareStatement(query);
-                for (int i=1;i<=params.length;i++) {
-                    preparedStatement.setObject(i,params[i-1]);
-                }
-                return preparedStatement;
-            };
-    }
 
     public User get(int id) throws SQLException, ClassNotFoundException {
-        String query = "select * from users where id = ? ";
-        Object[] params = new Object[]{id};
-        StatementStrategy statementStrategy = update(query, params);
-        return jdbcContext.jdbcContextWithStatementStrategyForGet(statementStrategy);
+        String sql = "select * from users where id = ? ";
+        Object[] args = new Object[]{id};
+        User user1 = null;
+        user1 = jdbcTemplate.queryForObject(sql,args,(resultSet,i) ->{
+            User user = new User();
+            user.setId(resultSet.getInt("id"));
+            user.setName(resultSet.getString("name"));
+            user.setPassword(resultSet.getString("password"));
+
+
+            return user;
+
+        });
+        return user1;
 
     }
 
 
-    public void delete(int id) {
-        String query = "delete from users where id = ?";
-        Object[] params = new Object[]{id};
-        StatementStrategy statementStrategy = update(query, params);
-        jdbcContext.jdbcContextWithStatementStrategyForDelete(statementStrategy);
+    public void delete(int id) throws ClassNotFoundException,SQLException{
+        String sql = "delete from users where id = ?";
+        Object[] args = new Object[]{id};
+        jdbcTemplate.update(sql,args);
 
 
     }
 
 
-    public void setJdbcContext(JdbcContext jdbcContext) {
-        this.jdbcContext = jdbcContext;
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
+
 }

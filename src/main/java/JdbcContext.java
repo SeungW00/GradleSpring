@@ -14,7 +14,8 @@ public class JdbcContext {
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-    public User jdbcContextWithStatementStrategyForGet(StatementStrategy statementStrategy) {
+    public User 
+    dbcContextWithStatementStrategyForGet(StatementStrategy statementStrategy) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
