@@ -1,3 +1,4 @@
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -67,6 +68,7 @@ import static org.junit.Assert.*;
 
         int id = userDao.add(user);
         userDao.delete(id);
+
         assertNull(userDao.get(id));
     }
 
