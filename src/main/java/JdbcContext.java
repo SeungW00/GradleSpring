@@ -66,14 +66,16 @@ public class JdbcContext {
         int id = 0;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+
         try {
             connection = dataSource.getConnection();
             preparedStatement = statementStrategy.makeStatement(connection);
-
             preparedStatement.executeUpdate();
             id = getLastInsertId(connection);
+
         } catch (SQLException e) {
             e.printStackTrace();
+
         } finally {
             if (preparedStatement != null)
                 try{
