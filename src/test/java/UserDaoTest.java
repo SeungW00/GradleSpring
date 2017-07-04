@@ -7,6 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -34,7 +37,7 @@ import static org.junit.Assert.*;
          //   userDao = context.getBean("userDao", UserDaoJdbc.class);
         }
 
-            @Test
+            @Test(expected = EmptyResultDataAccessException.class)
             public void get() throws SQLException, ClassNotFoundException {
 
                 int id = 91;
@@ -54,9 +57,9 @@ import static org.junit.Assert.*;
         String name = "SeungWoo";
         String password = "1234";
 
-            User user = new User();
-            user.setName(name);
-            user.setPassword(password);
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
 
         int id = userDao.add(user);
         User resultUser = userDao.get(id);
@@ -86,6 +89,11 @@ import static org.junit.Assert.*;
     public void deleteAll() throws SQLException,ClassNotFoundException{
         userDao.deleteAll();
         assertThat(userDao.getCount(),is(0));
+    }
+
+    @Test(expected = DataAccessException.class)
+    public void duplciatekey(){
+
     }
 
 

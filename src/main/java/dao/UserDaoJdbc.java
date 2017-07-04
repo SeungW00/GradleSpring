@@ -43,7 +43,7 @@ public class UserDaoJdbc implements UserDao{
         String sql = "select * from users where id = ? ";
         Object[] args = new Object[]{id};
         User user1 = null;
-        try {
+
             user1 = jdbcTemplate.queryForObject(sql,args,(resultSet,i) ->{
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
@@ -54,9 +54,7 @@ public class UserDaoJdbc implements UserDao{
                 return user;
 
             });
-        } catch (EmptyResultDataAccessException e) {
-           exit(0);
-        }
+
         return user1;
 
     }
