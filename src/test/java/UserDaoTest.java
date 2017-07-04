@@ -1,33 +1,43 @@
 
+import dao.User;
+import dao.UserDao;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.SQLException;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+
 
 /**
  * Created by Administrator on 2017-05-30.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="/daoFactory.xml")
         public class UserDaoTest {
 
-
-        private  UserDao userDao;
+        @Autowired
+        private UserDao userDao;
 
 
         @Before
         public void setup(){
 
-            ApplicationContext context = new GenericXmlApplicationContext("daoFactory.xml");
-            userDao = context.getBean("userDao",UserDao.class);
+      //     ApplicationContext context = new GenericXmlApplicationContext("daoFactory.xml");
+         //   userDao = context.getBean("userDao", UserDaoJdbc.class);
         }
 
             @Test
-            public void get() throws SQLException, ClassNotFoundException{
+            public void get() throws SQLException, ClassNotFoundException {
 
-                int id = 5;
+                int id = 91;
                 String name = "SeungWoo";
                 String password = "1234";
 
@@ -70,6 +80,12 @@ import static org.junit.Assert.*;
         userDao.delete(id);
 
         assertNull(userDao.get(id));
+    }
+
+    @Test
+    public void deleteAll() throws SQLException,ClassNotFoundException{
+        userDao.deleteAll();
+        assertThat(userDao.getCount(),is(0));
     }
 
 
