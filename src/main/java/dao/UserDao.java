@@ -1,16 +1,20 @@
 package dao;
 
+import domain.User;
+
 import java.sql.SQLException;
 
 /**
  * Created by Administrator on 2017-07-04.
  */
 public interface UserDao {
-    int add(User user) throws SQLException, ClassNotFoundException;
-    User get(int id) throws SQLException, ClassNotFoundException;
-    void delete(int id) throws SQLException,ClassNotFoundException;
+    void add(User user) throws SQLException, ClassNotFoundException;
+    void update(User user) throws SQLException, ClassNotFoundException;
+    User get(String id) throws SQLException, ClassNotFoundException;
+    void delete(String  id) throws SQLException,ClassNotFoundException;
     void deleteAll();
     int getCount();
+
 
 
 }

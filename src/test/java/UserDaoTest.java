@@ -1,5 +1,6 @@
 
-import dao.User;
+import domain.Level;
+import domain.User;
 import dao.UserDao;
 
 import org.junit.Before;
@@ -8,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,7 +26,12 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations="/daoFactory.xml")
         public class UserDaoTest {
 
-        @Autowired
+
+        private User user1;
+        private Level level;
+
+
+    @Autowired
         private UserDao userDao;
 
 
@@ -35,54 +40,45 @@ import static org.junit.Assert.*;
 
       //     ApplicationContext context = new GenericXmlApplicationContext("daoFactory.xml");
          //   userDao = context.getBean("userDao", UserDaoJdbc.class);
+
+          user1 = new User("hsw2021","SeungWoo","123",Level.GOLD,1,3);
+
         }
 
-            @Test(expected = EmptyResultDataAccessException.class)
-            public void get() throws SQLException, ClassNotFoundException {
+    @Test(expected = EmptyResultDataAccessException.class)
+    public void get() throws SQLException, ClassNotFoundException {
 
-                int id = 91;
-                String name = "SeungWoo";
-                String password = "1234";
+        User user =userDao.get(user1.getId());
+        assertEquals(user1.getId(),user.getId());
+        assertEquals(user1.getName(),user.getName());
+        assertEquals(user1.getPassword(),user.getPassword());
+        assertEquals(user1.getLevel(),user.getLevel());
+        assertEquals(user1.getLogin(),user.getLogin());
+        assertEquals(user1.getRecommend(),user.getRecommend());
 
-        User user =userDao.get(id);
-        assertEquals(id,user.getId());
-        assertEquals(name,user.getName());
-        assertEquals(password,user.getPassword());
 
     }
     @Test
     public void add() throws SQLException, ClassNotFoundException{
 
 
-        String name = "SeungWoo";
-        String password = "1234";
-
-        User user = new User();
-        user.setName(name);
-        user.setPassword(password);
-
-        int id = userDao.add(user);
-        User resultUser = userDao.get(id);
-        assertEquals(id,resultUser.getId());
-        assertEquals(name,resultUser.getName());
-        assertEquals(password,resultUser.getPassword());
-
+        userDao.add(user1);
+        User resultUser = userDao.get(user1.getId());
+        assertEquals(user1.getId(),resultUser.getId());
+        assertEquals(user1.getName(),resultUser.getName());
+        assertEquals(user1.getPassword(),resultUser.getPassword());
+        assertEquals(user1.getLevel(),resultUser.getLevel());
+        assertEquals(user1.getLogin(),resultUser.getLogin());
+        assertEquals(user1.getRecommend(),resultUser.getRecommend());
 
     }
-    @Test
+    @Test(expected = EmptyResultDataAccessException.class)
     public void delete() throws SQLException, ClassNotFoundException {
 
-        String name = "SeungWoo";
-        String password = "1234";
 
-        User user = new User();
-        user.setName(name);
-        user.setPassword(password);
+        userDao.delete(user1.getId());
 
-        int id = userDao.add(user);
-        userDao.delete(id);
-
-        assertNull(userDao.get(id));
+        assertNull(userDao.get(user1.getId()));
     }
 
     @Test
@@ -96,6 +92,13 @@ import static org.junit.Assert.*;
 
     }
 
+
+    @Test
+    public void update() throws SQLException,ClassNotFoundException{
+
+
+
+    }
 
 
 
