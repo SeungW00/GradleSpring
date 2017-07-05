@@ -28,7 +28,9 @@ import static org.junit.Assert.*;
 
 
         private User user1;
-        private Level level;
+        private User user2;
+        private User updateUser;
+
 
 
     @Autowired
@@ -41,7 +43,9 @@ import static org.junit.Assert.*;
       //     ApplicationContext context = new GenericXmlApplicationContext("daoFactory.xml");
          //   userDao = context.getBean("userDao", UserDaoJdbc.class);
 
-          user1 = new User("hsw2021","SeungWoo","123",Level.GOLD,1,3);
+          user1 = new User("we34d","SeungWoo","123",Level.GOLD,1,3);
+          user2 = new User("1wsd","SeungWoo","123",Level.GOLD,1,3);
+          updateUser = new User("hsw2021","SeungWoo","333",Level.GOLD,5,1);
 
         }
 
@@ -49,12 +53,7 @@ import static org.junit.Assert.*;
     public void get() throws SQLException, ClassNotFoundException {
 
         User user =userDao.get(user1.getId());
-        assertEquals(user1.getId(),user.getId());
-        assertEquals(user1.getName(),user.getName());
-        assertEquals(user1.getPassword(),user.getPassword());
-        assertEquals(user1.getLevel(),user.getLevel());
-        assertEquals(user1.getLogin(),user.getLogin());
-        assertEquals(user1.getRecommend(),user.getRecommend());
+        checkSameUser(user1,user);
 
 
     }
@@ -64,12 +63,7 @@ import static org.junit.Assert.*;
 
         userDao.add(user1);
         User resultUser = userDao.get(user1.getId());
-        assertEquals(user1.getId(),resultUser.getId());
-        assertEquals(user1.getName(),resultUser.getName());
-        assertEquals(user1.getPassword(),resultUser.getPassword());
-        assertEquals(user1.getLevel(),resultUser.getLevel());
-        assertEquals(user1.getLogin(),resultUser.getLogin());
-        assertEquals(user1.getRecommend(),resultUser.getRecommend());
+        checkSameUser(user1,resultUser);
 
     }
     @Test(expected = EmptyResultDataAccessException.class)
@@ -95,12 +89,26 @@ import static org.junit.Assert.*;
 
     @Test
     public void update() throws SQLException,ClassNotFoundException{
+        userDao.update(updateUser);
+        User resultUser1 = userDao.get(updateUser.getId());
+        User resultUser2 = userDao.get(user2.getId());
+       checkSameUser(updateUser,resultUser1);
+       checkSameUser(user2,resultUser2);
+
 
 
 
     }
 
+    private void checkSameUser(User user1, User resultUser) {
+        assertEquals(user1.getId(),resultUser.getId());
+        assertEquals(user1.getName(),resultUser.getName());
+        assertEquals(user1.getPassword(),resultUser.getPassword());
+        assertEquals(user1.getLevel(),resultUser.getLevel());
+        assertEquals(user1.getLogin(),resultUser.getLogin());
+        assertEquals(user1.getRecommend(),resultUser.getRecommend());
 
+    }
 
 
 }
