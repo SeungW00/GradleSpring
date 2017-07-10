@@ -2,11 +2,13 @@ package dao;
 
 import domain.User;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 
 import java.sql.*;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017-05-30.
@@ -17,13 +19,28 @@ public class UserDaoJdbc implements UserDao{
     private JdbcTemplate jdbcTemplate;
     private domain.Level level;
 
+    private RowMapper<User> userRowMapper = (resultSet, rowNum)->{
+        return getUser(resultSet);
+    };
+
+    private User getUser(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getString("id"));
+        user.setName(resultSet.getString("name"));
+        user.setPassword(resultSet.getString("password"));
+        user.setLevel(domain.Level.valueOf(resultSet.getInt("Level")));
+        user.setLogin(resultSet.getInt("Login"));
+        user.setRecommend(resultSet.getInt("Recommend"));
+        return user;
+    }
+
 
     public UserDaoJdbc() {
     }
 
 
     public void add(User user) throws SQLException, ClassNotFoundException {
-        String sql = "insert into users(id,name,password,Level,Login,Recommend) VALUES (?,?,?,?,?,?)";
+      /*  String sql = "insert into users(id,name,password,Level,Login,Recommend) VALUES (?,?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection ->{
@@ -37,7 +54,12 @@ public class UserDaoJdbc implements UserDao{
             preparedStatement.setInt(6,user.getRecommend());
             return preparedStatement;
 
-        },keyHolder);
+        },keyHolder);*/
+        this.jdbcTemplate.update(
+                "insert into users(id, name, password, level, login, recommend) " +
+                        "values(?,?,?,?,?,?)",
+                user.getId(), user.getName(), user.getPassword(),
+                user.getLevel().intValue(), user.getLogin(), user.getRecommend());
 
 
     }
@@ -52,26 +74,21 @@ public class UserDaoJdbc implements UserDao{
 
 
     public User get(String id) throws SQLException, ClassNotFoundException {
+        /*
         String sql = "select * from users where id = ? ";
         Object[] args = new Object[]{id};
         User user1 = null;
 
             user1 = jdbcTemplate.queryForObject(sql,args,(resultSet,i) ->{
-                User user = new User();
-                user.setId(resultSet.getString("id"));
-                user.setName(resultSet.getString("name"));
-                user.setPassword(resultSet.getString("password"));
-                user.setLevel(domain.Level.valueOf(resultSet.getInt("Level")));
-                user.setLogin(resultSet.getInt("Login"));
-                user.setRecommend(resultSet.getInt("Recommend"));
-
-
-                return user;
+                return getUser(resultSet);
 
             });
 
 
         return user1;
+*/
+        return this.jdbcTemplate.queryForObject("select * from users where id = ?",
+                new Object[] {id}, this.userRowMapper);
 
     }
 
@@ -97,5 +114,10 @@ public class UserDaoJdbc implements UserDao{
 
     public int getCount() {
         return jdbcTemplate.queryForObject("select count(*) from users where password = ?",new Object[]{"!234"},Integer.class);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return jdbcTemplate.query("select *from users order by id ",userRowMapper);
     }
 }
